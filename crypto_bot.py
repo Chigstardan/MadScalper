@@ -104,7 +104,7 @@ def strategy(pair, qty):
 			if len(dfx) > 0:
 				dfx['B2'] = dfx.Low.cummin()
 				dfx['TSL2'] = dfx.B2 + dfx.ATR
-				print(f'Current Stop is '+str(dfx.TSL1.iloc[-1]))
+				print(f'Current Stop is '+str(dfx.TSL2.iloc[-1]))
 				if dfx.Close.iloc[-1] > dfx.TSL2.iloc[-1]:	
 					order = client.futures_create_order(symbol=pair, 
 		                            			side='BUY',
