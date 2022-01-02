@@ -84,12 +84,22 @@ def strategy(pair, qty):
 		                            type='MARKET',
 		                            quantity=qty)
 					print(order)
+					while True:
+						time.sleep(5)
+						df = GetMinuteData(pair, '5m', '600')
+						applytechnicals(df)
+						inst = Signals(df)
+						inst.decide()
+						dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
+						dfx = dfx.copy()
+						if len(dfx) > 0:
+							break
 					break
 
 	if df.Sell.iloc[-1]:
 		sellprice = df.Close.iloc[-1]
 		order = client.futures_create_order(symbol=pair, 
-		                            side='SELL',
+		                           side='SELL',
 		                            type='MARKET',
 		                            quantity=qty)
 		print(order)
@@ -111,6 +121,16 @@ def strategy(pair, qty):
 		                           			 type='MARKET',
 		                           			 quantity=qty)
 					print(order)
+					while True:
+						time.sleep(5)
+						df = GetMinuteData(pair, '5m', '600')
+						applytechnicals(df)
+						inst = Signals(df)
+						inst.decide()
+						dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
+						dfx = dfx.copy()
+						if len(dfx) > 0:
+							break
 					break
 			
 while True:
