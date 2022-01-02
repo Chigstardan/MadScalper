@@ -30,15 +30,15 @@ class Signals:
 	def __init__(self, df):
 		self.df = df	
 	def decide(self):
-		self.df['Buy'] = np.where((self.df.ema3 > self.df.ema9)
-		                       & (self.df.ema6 > self.df.ema9)
-		                       & (self.df.ema3 > self.df.ema6)
+		self.df['Buy'] = np.where((self.df.ema3[-1] > self.df.ema9[-1])
+		                       & (self.df.ema6[-1] > self.df.ema9[-1])
+		                       & (self.df.ema3[-1] > self.df.ema6[-1])
 		                       & (self.df.rsi > 50)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
 		                       & (self.df.High[-2] < self.df.Close), 1, 0)
-		self.df['Sell'] = np.where((self.df.ema3 < self.df.ema9)
-		                          & (self.df.ema6 < self.df.ema9)
-		                          & (self.df.ema3 < self.df.ema6)
+		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
+		                          & (self.df.ema6[-1] < self.df.ema9[-1])
+		                          & (self.df.ema3[-1] < self.df.ema6[-1])
 	                          	& (self.df.rsi < 50)
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 	                          	& (self.df.Low[-2] > self.df.Close), 1, 0)
