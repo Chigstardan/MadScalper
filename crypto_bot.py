@@ -68,7 +68,7 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(2)
-			df = GetMinuteData(pair, '5m', '600')
+			df = GetMinuteData(pair, '1m', '600')
 			applytechnicals(df)
 			inst = Signals(df)
 			inst.decide()
@@ -76,7 +76,7 @@ def strategy(pair, qty):
 			dfx = dfx.copy()
 			if len(dfx) > 0:
 				dfx['B1'] = dfx.High.cummax()
-				dfx['TSL1'] = dfx.B1 - (dfx.ATR * 0.6)
+				dfx['TSL1'] = dfx.B1 - (dfx.ATR * 2)
 				print(f'Current Stop is '+str(dfx.TSL1.iloc[-1]))
 				if dfx.Close.iloc[-1] < dfx.TSL1.iloc[-1]:
 					order = client.futures_create_order(symbol=pair, 
@@ -95,7 +95,7 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(2)
-			df = GetMinuteData(pair, '5m', '600')
+			df = GetMinuteData(pair, '1m', '600')
 			applytechnicals(df)
 			inst = Signals(df)
 			inst.decide()		
@@ -103,7 +103,7 @@ def strategy(pair, qty):
 			dfx = dfx.copy()
 			if len(dfx) > 0:
 				dfx['B2'] = dfx.Low.cummin()
-				dfx['TSL2'] = dfx.B2 + (dfx.ATR * 0.6)
+				dfx['TSL2'] = dfx.B2 + (dfx.ATR * 2)
 				print(f'Current Stop is '+str(dfx.TSL2.iloc[-1]))
 				if dfx.Close.iloc[-1] > dfx.TSL2.iloc[-1]:	
 					order = client.futures_create_order(symbol=pair, 
