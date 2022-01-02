@@ -3,7 +3,7 @@ import pandas as pd
 import ta
 import numpy as np
 import time
-from binance.exceptions import BinanceAPIException
+
 api_secret = 'kqo5vCzqaQUjhsIsdeqrbawKPFUd6TYVvaqcPggxDZWfPZTWfAB4SVXuHWRymRXo'
 api_key = 'oicPKWPW9v7UfaFUOj7H9yZB8oO5EbTdicm1KXZI4M0D2ory42Ic6E3lsAUwZYcP'
 client = Client(api_key, api_secret)
@@ -76,7 +76,7 @@ def strategy(pair, qty):
 			dfx = dfx.copy()
 			if len(dfx) > 0:
 				dfx['B1'] = dfx.High.cummax()
-				dfx['TSL1'] = dfx.B1 - dfx.ATR
+				dfx['TSL1'] = dfx.B1 - (dfx.ATR * 0.6)
 				print(f'Current Stop is '+str(dfx.TSL1.iloc[-1]))
 				if dfx.Close.iloc[-1] < dfx.TSL1.iloc[-1]:
 					order = client.futures_create_order(symbol=pair, 
@@ -103,7 +103,7 @@ def strategy(pair, qty):
 			dfx = dfx.copy()
 			if len(dfx) > 0:
 				dfx['B2'] = dfx.Low.cummin()
-				dfx['TSL2'] = dfx.B2 + dfx.ATR
+				dfx['TSL2'] = dfx.B2 + (dfx.ATR * 0.6)
 				print(f'Current Stop is '+str(dfx.TSL2.iloc[-1]))
 				if dfx.Close.iloc[-1] > dfx.TSL2.iloc[-1]:	
 					order = client.futures_create_order(symbol=pair, 
