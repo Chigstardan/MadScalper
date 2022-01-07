@@ -86,13 +86,14 @@ def strategy(pair, qty):
 		                            quantity=qty)
 		print(order)
 		while True:
+			time.sleep(1)
 			df = GetMinuteData('ETHUSDT', '5m', '600')
 			dx = GetMinuteData('ETHUSDT', '15m', '1200')
 			applytechnicals(df, dx)
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.rsi4.iloc[-1] < df.rsi9.iloc[-1]:
+			if df.rsi4.iloc[-2] < df.rsi9.iloc[-2]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -125,7 +126,7 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()		
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.rsi4.iloc[-1] > df.rsi9.iloc[-1]:	
+			if df.rsi4.iloc[-2] > df.rsi9.iloc[-2]:	
 				order = client.futures_create_order(symbol=pair, 
 		                            			side='BUY',
 		                           			 type='MARKET',
@@ -146,4 +147,4 @@ def strategy(pair, qty):
 			
 while True:
 	strategy('ETHUSDT', 0.01)
-	time.sleep(0.7)
+	time.sleep(1)
