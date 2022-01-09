@@ -161,7 +161,7 @@ def strategy(pair, qty):
 					if len(dfx) > 0:
 						break
 				break
-			if (sellprice + (df.ATR.iloc[-1] * 0.5)) > df.Close.iloc[-1]:	
+			if (sellprice + (df.ATR.iloc[-1] * 0.5)) < df.Close.iloc[-1]:	
 				order = client.futures_create_order(symbol=pair, 
 		                            			side='BUY',
 		                           			 type='MARKET',
