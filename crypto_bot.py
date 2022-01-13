@@ -22,7 +22,7 @@ def applytechnicals(df, dx):
 	df['ema6'] = ta.trend.ema_indicator(df.Close, window=6)
 	df['ema9'] = ta.trend.ema_indicator(df.Close, window=9)
 	df['rsi'] = ta.momentum.rsi(df.Close, window=5)
-	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close)
+	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close, window=3)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=14)
 	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=18, window_fast=7, window_sign=9)
 	df.dropna(inplace=True)
@@ -45,7 +45,7 @@ class Signals:
 		                       & (self.df.High[-2] < self.df.Close)
 		                       & (self.df.High[-3] < self.df.Close)
 		                       & (self.df.High[-4] < self.df.Close)
-		                       & (self.df.ADX > 20), 1, 0)
+		                       & (self.df.ADX > 50), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
@@ -53,7 +53,7 @@ class Signals:
 	                          	& (self.df.Low[-2] > self.df.Close)
 	                          	& (self.df.Low[-3] > self.df.Close)
 	                          	& (self.df.Low[-4] > self.df.Close)
-	                          	& (self.df.ADX > 20), 1, 0)
+	                          	& (self.df.ADX > 50), 1, 0)
 		self.dx['HBuy'] = np.where((self.dx.ema3 > self.dx.ema9)
 		                       & (self.dx.ema6 > self.dx.ema9)
 		                       & (self.dx.ema3 > self.dx.ema6)
@@ -113,7 +113,7 @@ def strategy(pair, qty):
 					if len(dfx) > 0:
 						break
 				break
-			if (buyprice - (df.ATR.iloc[-1] * 0.5)) > df.Close.iloc[-1]:
+			if (buyprice - (df.ATR.iloc[-1] * 0.35)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -164,7 +164,7 @@ def strategy(pair, qty):
 					if len(dfx) > 0:
 						break
 				break
-			if (sellprice + (df.ATR.iloc[-1] * 0.5)) < df.Close.iloc[-1]:	
+			if (sellprice + (df.ATR.iloc[-1] * 0.35)) < df.Close.iloc[-1]:	
 				order = client.futures_create_order(symbol=pair, 
 		                            			side='BUY',
 		                           			 type='MARKET',
