@@ -106,7 +106,7 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(0.9)
-			df = GetMinuteData('ETHUSDT', '1m', '600')
+			df = GetMinuteData('ETHUSDT', '5m', '600')
 			dx = GetMinuteData('ETHUSDT', '5m', '600')
 			applytechnicals(df, dx)
 			inst = Signals(df, dx)
