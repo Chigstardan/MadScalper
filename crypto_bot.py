@@ -21,6 +21,7 @@ def applytechnicals(df, dx):
 	df['ema3'] = ta.trend.ema_indicator(df.Close, window=3)
 	df['ema6'] = ta.trend.ema_indicator(df.Close, window=6)
 	df['ema9'] = ta.trend.ema_indicator(df.Close, window=9)
+	df['ema2'] = ta.trend.ema_indicator(df.Close, window=2)
 	df['rsi'] = ta.momentum.rsi(df.Close, window=5)
 	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close, window=3)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=14)
@@ -83,37 +84,19 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(1)
-			df = GetMinuteData('ETHUSDT', '1m', '600')
+			df = GetMinuteData('ETHUSDT', '5m', '600')
 			dx = GetMinuteData('ETHUSDT', '5m', '600')
 			applytechnicals(df, dx)
 			inst = Signals(df, dx)
 			inst.decide()
-			dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-			dfx = dfx.copy()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if len(dfx) > 0:
-				dfx['B1'] = df.Close.cummax()
-				dfx['TSL1'] = dfx.B1 - (dx.ATR.iloc[-1] * 0.5)
-				print(f'Current Close is '+str(dfx.Close.iloc[-1]))
-				print(f'Current Stop is '+str(dfx.TSL1.iloc[-1]))
-				if dfx.TSL1.iloc[-1] > dfx.Close.iloc[-1]:
-					order = client.futures_create_order(symbol=pair, 
+			if df.ema3.iloc[-2] < df.ema2.iloc[-2]:
+				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
 		                            quantity=qty)
-					print(order)	
-					while True:
-						time.sleep(5)
-						df = GetMinuteData(pair, '5m', '600')
-						dx = GetMinuteData(pair, '15m', '600')
-						applytechnicals(df, dx)
-						inst = Signals(df, dx)
-						inst.decide()
-						dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-						dfx = dfx.copy()
-						if len(dfx) > 0:
-							break
-					break
+				print(order)	
+				break
 	if df.Sell.iloc[-1] and dx.HSell.iloc[-1]:
 		sellprice = df.Close.iloc[-1]
 		order = client.futures_create_order(symbol=pair, 
@@ -128,31 +111,14 @@ def strategy(pair, qty):
 			applytechnicals(df, dx)
 			inst = Signals(df, dx)
 			inst.decide()
-			dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-			dfx = dfx.copy()
-			if len(dfx) > 0:
-				dfx['B2'] = df.Close.cummax()
-				dfx['TSL2'] = dfx.B2 + (dx.ATR.iloc[-1] * 0.5)
-				print(f'Current Close is '+str(dfx.Close.iloc[-1]))
-				print(f'Current Stop is '+str(dfx.TSL2.iloc[-1]))
-				if dfx.TSL2.iloc[-1] < dfx.Close.iloc[-1]:
-					order = client.futures_create_order(symbol=pair, 
+			print(f'Current Close is '+str(df.Close.iloc[-1]))
+			if df.ema3.iloc[-2] > df.ema2.iloc[-2]:
+				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
 		                            quantity=qty)
-					print(order)
-					while True:
-						time.sleep(5)
-						df = GetMinuteData(pair, '5m', '600')
-						dx = GetMinuteData(pair, '15m', '600')
-						applytechnicals(df, dx)
-						inst = Signals(df, dx)
-						inst.decide()
-						dfx = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-						dfx = dfx.copy()
-						if len(dfx) > 0:
-							break
-					break
+				print(order)
+				break
 			
 while True:
 	strategy('ETHUSDT', 0.01)
