@@ -90,7 +90,7 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.ema3.iloc[-2] < df.ema2.iloc[-2]:
+			if df.ema3.iloc[-2] > df.ema2.iloc[-2]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -112,7 +112,7 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.ema3.iloc[-2] > df.ema2.iloc[-2]:
+			if df.ema3.iloc[-2] < df.ema2.iloc[-2]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
