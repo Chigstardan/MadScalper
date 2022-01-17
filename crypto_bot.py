@@ -25,7 +25,7 @@ def applytechnicals(df, dx):
 	df['rsi'] = ta.momentum.rsi(df.Close, window=5)
 	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close, window=3)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=14)
-	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=18, window_fast=7, window_sign=9)
+	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=6, window_fast=3, window_sign=3)
 	df.dropna(inplace=True)
 	dx['ema3'] = ta.trend.ema_indicator(dx.Close, window=3)
 	dx['ema6'] = ta.trend.ema_indicator(dx.Close, window=6)
@@ -43,12 +43,14 @@ class Signals:
 		                       & (self.df.ema6[-1] > self.df.ema9[-1])
 		                       & (self.df.ema3[-1] > self.df.ema6[-1])
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
-		                       & (self.df.Low.iloc[-2] < self.df.ema6[-2] ), 1, 0)
+		                       & (self.df.Low.iloc[-2] < self.df.ema6[-2] )
+		                       & (self.df.macd > 0), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-	                          	& (self.df.High.iloc[-2] > self.df.ema6[-2]), 1, 0)
+	                          	& (self.df.High.iloc[-2] > self.df.ema6[-2])
+	                          	& (self.df.macd < 0), 1, 0)
 		self.dx['HBuy'] = np.where((self.dx.ema3 > self.dx.ema9)
 		                       & (self.dx.ema6 > self.dx.ema9)
 		                       & (self.dx.ema3 > self.dx.ema6)
@@ -90,12 +92,22 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.ema3.iloc[-2] > df.ema2.iloc[-2]:
+			if df.macd.iloc[-1] < 0:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
 		                            quantity=qty)
-				print(order)	
+				print(order)
+				while True:
+					time.sleep(0.9)
+					df = GetMinuteData('ETHUSDT', '5m', '600')
+					dx = GetMinuteData('ETHUSDT', '5m', '600')
+					applytechnicals(df, dx)
+					inst = Signals(df, dx)
+					inst.decide()
+					df = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
+					if len(df) > 0:
+						break	
 				break
 	if df.Sell.iloc[-1] and dx.HSell.iloc[-1]:
 		sellprice = df.Close.iloc[-1]
@@ -112,14 +124,24 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if df.ema3.iloc[-2] < df.ema2.iloc[-2]:
+			if df.macd.iloc[-1] > 0:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
 		                            quantity=qty)
 				print(order)
+				while True:
+					time.sleep(0.9)
+					df = GetMinuteData('ETHUSDT', '5m', '600')
+					dx = GetMinuteData('ETHUSDT', '5m', '600')
+					applytechnicals(df, dx)
+					inst = Signals(df, dx)
+					inst.decide()
+					df = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
+					if len(df) > 0:
+						break	
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.01)
+	strategy('ETHUSDT', 0.007)
 	time.sleep(1)
