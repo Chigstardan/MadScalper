@@ -41,7 +41,7 @@ class Signals:
 		                       & (self.df.ema3[-1] > self.df.ema6[-1])
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
 		                       & (self.df.Low[-2] < self.df.ema6[-2] )
-		                       & (self.df.macd[-2]] > 0), 1, 0)
+		                       & (self.df.macd[-2] > 0), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
