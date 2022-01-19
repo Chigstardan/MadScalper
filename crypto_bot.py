@@ -138,7 +138,7 @@ def strategy(pair, qty):
 			inst = Signals(df, dx)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if (buyprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
+			if (sellprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
