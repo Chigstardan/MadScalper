@@ -103,7 +103,7 @@ def strategy(pair, qty):
 					inst = Signals(df, dx)
 					inst.decide()
 					df = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-					if len(dfx) > 0:
+					if len(df) > 0:
 						break
 				break
 			if df.macd.iloc[-1] < 0:
@@ -152,7 +152,7 @@ def strategy(pair, qty):
 					inst = Signals(df, dx)
 					inst.decide()
 					df = df.loc[df.index > pd.to_datetime(order['updateTime'], unit='ms')]
-					if len(dfx) > 0:
+					if len(df) > 0:
 						break
 				break
 			if df.macd.iloc[-1] > 0:
