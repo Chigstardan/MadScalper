@@ -107,7 +107,7 @@ def strategy(pair, qty):
 					if len(df) > 0:
 						break
 				break
-			if df.macd.iloc[-1] < 0:
+			if (buyprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -156,7 +156,7 @@ def strategy(pair, qty):
 					if len(df) > 0:
 						break
 				break
-			if df.macd.iloc[-1] > 0:
+			if (sellprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
