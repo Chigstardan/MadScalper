@@ -66,8 +66,8 @@ print(dfx.to_string())'''
 
 	                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          	
 def strategy(pair, qty):
-	df = GetMinuteData('ETHUSDT', '5m', '600')
-	dx = GetMinuteData('ETHUSDT', '15m', '1200')
+	df = GetMinuteData('ETHUSDT', '1m', '600')
+	dx = GetMinuteData('ETHUSDT', '5m', '1200')
 	applytechnicals(df, dx)
 	inst = Signals(df, dx)
 	inst.decide()
