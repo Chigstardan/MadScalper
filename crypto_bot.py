@@ -21,7 +21,7 @@ def applytechnicals(df):
 	df['ema3'] = ta.trend.ema_indicator(df.Close, window=3)
 	df['ema6'] = ta.trend.ema_indicator(df.Close, window=6)
 	df['ema9'] = ta.trend.ema_indicator(df.Close, window=9)
-	df['ema20'] = ta.trend.ema_indicator(df.Close, window=20)
+	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=10)
 	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close)
 	df['macd'] = ta.trend.macd_diff(df.Close)
@@ -34,13 +34,13 @@ class Signals:
 		self.df['Buy'] = np.where((self.df.ema3[-1] > self.df.ema9[-1])
 		                       & (self.df.ema6[-1] > self.df.ema9[-1])
 		                       & (self.df.ema3[-1] > self.df.ema6[-1])
-		                       & (self.df.Close > self.df.ema20)
+		                       & (self.df.Open > self.df.ema50)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2]), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-	                          	& (self.df.Close < self.df.ema20),1 , 0)
+	                          	& (self.df.Open < self.df.ema50),1 , 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '5m', '10')
 applytechnicals(df)
@@ -84,7 +84,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema3[-2] < df.ema6[-2]:
+					if df.ema3.iloc[-2] < df.ema6.iloc[-2]:
 						break
 				break
 			if (buyprice - (df.ATR.iloc[-1] * 0.6)) > df.Close.iloc[-1]:
@@ -99,7 +99,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema3[-2] < df.ema6[-2]:
+					if df.ema3.iloc[-2] < df.ema6.iloc[-2]:
 						break	
 				break
 	if df.Sell.iloc[-1]:
@@ -128,7 +128,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema3[-2] > df.ema6[-2]:
+					if df.ema3.iloc[-2] > df.ema6.iloc[-2]:
 						break
 				break
 			if (sellprice + (df.ATR.iloc[-1] * 0.6)) < df.Close.iloc[-1]:
@@ -143,7 +143,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema3[-2] > df.ema6[-2]:
+					if df.ema3.iloc[-2] > df.ema6.iloc[-2]:
 						break	
 				break
 			
