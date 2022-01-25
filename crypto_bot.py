@@ -95,7 +95,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(0.9)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -124,10 +124,9 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(0.9)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
-					dx = GetMinuteData('ETHUSDT', '5m', '600')
-					applytechnicals(df, dx)
-					inst = Signals(df, dx)
+					df = GetMinuteData('ETHUSDT', '1m', '600')
+					applytechnicals(df)
+					inst = Signals(df)
 					inst.decide()
 					if df.ema3[-2] > df.ema6[-2]:
 						break
@@ -140,7 +139,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(0.9)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
