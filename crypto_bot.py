@@ -46,12 +46,12 @@ class Signals:
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
-		                          & (self.df.ema3[-1] > self.df.ema9[-1])
-		                          & (self.df.ema6[-1] > self.df.ema9[-1])
-		                          & (self.df.ema3[-1] > self.df.ema6[-1])
-		                          & (self.df.ema3[-1] > self.df.ema9[-1])
-		                          & (self.df.ema6[-1] > self.df.ema9[-1])
-		                          & (self.df.ema3[-1] > self.df.ema6[-1])
+		                          & (self.df.ema3[-2] > self.df.ema9[-2])
+		                          & (self.df.ema6[-2] > self.df.ema9[-2])
+		                          & (self.df.ema3[-2] > self.df.ema6[-2])
+		                          & (self.df.ema3[-3] > self.df.ema9[-3])
+		                          & (self.df.ema6[-3] > self.df.ema9[-3])
+		                          & (self.df.ema3[-3] > self.df.ema6[-3])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 	                          	& (self.df.ema20 < self.df.ema50),1 , 0)
 	                          	
@@ -65,7 +65,7 @@ print(dfx.to_string())'''
 
 	                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          	
 def strategy(pair, qty):
-	df = GetMinuteData('ETHUSDT', '5m', '600')
+	df = GetMinuteData('ETHUSDT', '1m', '600')
 	applytechnicals(df)
 	inst = Signals(df)
 	inst.decide()
@@ -93,7 +93,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -108,7 +108,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -137,7 +137,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -152,7 +152,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '600')
+					df = GetMinuteData('ETHUSDT', '1m', '600')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -161,5 +161,5 @@ def strategy(pair, qty):
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.003)
+	strategy('ETHUSDT', 0.03)
 	time.sleep(1)
