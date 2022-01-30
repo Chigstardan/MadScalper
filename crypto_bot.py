@@ -42,7 +42,7 @@ class Signals:
 		                       & (self.df.ema6[-3] > self.df.ema9[-3])
 		                       & (self.df.ema3[-3] > self.df.ema6[-3])
 		                       & (self.df.ema20 > self.df.ema50)
-		                       & (self.df.ADX > 25)
+		                       & (self.df.ADX.iloc[-1] > 25)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2]), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
@@ -53,7 +53,7 @@ class Signals:
 		                          & (self.df.ema3[-3] > self.df.ema9[-3])
 		                          & (self.df.ema6[-3] > self.df.ema9[-3])
 		                          & (self.df.ema3[-3] > self.df.ema6[-3])
-		                          & (self.df.ADX > 25)
+		                          & (self.df.ADX.iloc[-1] > 25)
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 	                          	& (self.df.ema20 < self.df.ema50),1 , 0)
 	                          	
@@ -163,5 +163,5 @@ def strategy(pair, qty):
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.03)
+	strategy('ETHUSDT', 0.05)
 	time.sleep(1)
