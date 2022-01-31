@@ -24,8 +24,6 @@ def applytechnicals(df):
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ema20'] = ta.trend.ema_indicator(df.Close, window=20)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=10)
-	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close, window=3)
-	df['macd'] = ta.trend.macd_diff(df.Close)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -43,9 +41,9 @@ class Signals:
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
-		                          & (self.df.ema3[-2] > self.df.ema9[-2])
-		                          & (self.df.ema6[-2] > self.df.ema9[-2])
-		                          & (self.df.ema3[-2] > self.df.ema6[-2])
+		                          & (self.df.ema3[-2] < self.df.ema9[-2])
+		                          & (self.df.ema6[-2] < self.df.ema9[-2])
+		                          & (self.df.ema3[-2] < self.df.ema6[-2])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 	                          	& (self.df.ema20 < self.df.ema50), 1, 0)
 	                          	
