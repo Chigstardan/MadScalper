@@ -118,7 +118,7 @@ def strategy(pair, qty):
 					inst.decide()
 					if df.ema3[-2] < df.ema9[-2]:
 						break
-					if df.Open.iloc[-2] > df.Close.iloc[-2] and df.Close.iloc[-2] < df.Open.iloc[-3] and df.Open.iloc[-3] < df.Close.iloc[-3]:
+					if df.Open.iloc[-2] < df.Close.iloc[-2] and df.Close.iloc[-2] > df.Open.iloc[-3] and df.Open.iloc[-3] > df.Close.iloc[-3]:
 						break	
 				break
 	if df.Sell.iloc[-1]:
@@ -149,7 +149,8 @@ def strategy(pair, qty):
 					inst.decide()
 					if df.ema3[-2] > df.ema9[-2]:
 						break
-					if 
+					if df.Open.iloc[-2] > df.Close.iloc[-2] and df.Close.iloc[-2] < df.Open.iloc[-3] and df.Open.iloc[-3] < df.Close.iloc[-3]:
+						break
 				break
 			if (sellprice + (df.ATR.iloc[-1] * 0.6)) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
@@ -164,6 +165,8 @@ def strategy(pair, qty):
 					inst = Signals(df)
 					inst.decide()
 					if df.ema3[-2] < df.ema9[-2]:
+						break
+					if df.Open.iloc[-2] > df.Close.iloc[-2] and df.Close.iloc[-2] < df.Open.iloc[-3] and df.Open.iloc[-3] < df.Close.iloc[-3]:
 						break	
 				break
 			
