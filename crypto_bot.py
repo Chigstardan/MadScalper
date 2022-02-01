@@ -24,7 +24,7 @@ def applytechnicals(df):
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ema20'] = ta.trend.ema_indicator(df.Close, window=20)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=10)
-	df['macd'] ° ta.trend.macd_diff(df.Close)
+	df['macd'] = ta.trend.macd_diff(df.Close)
 	df.dropna(inplace=True)
 
 class Signals:
