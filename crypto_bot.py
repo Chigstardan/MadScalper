@@ -49,7 +49,7 @@ class Signals:
 		                          & (self.df.ema3[-2] < self.df.ema6[-2])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 	                          	& (self.df.ema20 < self.df.ema50)
-	                          	& (self.df.High[-2] < self.ema20[-2])
+	                          	& (self.df.High[-2] < self.df.ema20[-2])
 	                          	& (self.df.macd < -0.1), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
