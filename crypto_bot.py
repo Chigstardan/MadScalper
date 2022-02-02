@@ -23,6 +23,7 @@ def applytechnicals(df):
 	df['ema9'] = ta.trend.ema_indicator(df.Close, window=9)
 	df['ema200'] = ta.trend.ema_indicator(df.Close, window=200)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close, window=10)
+	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -36,7 +37,8 @@ class Signals:
 		                       & (self.df.ema6[-2] > self.df.ema9[-2])
 		                       & (self.df.ema3[-2] > self.df.ema6[-2])
 		                       & (self.df.Open > self.df.ema200)
-		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2]), 1, 0)
+		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
+		                       & (self.df.ADX[-2] > 25), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema3[-1] < self.df.ema9[-1])
 		                          & (self.df.ema6[-1] < self.df.ema9[-1])
 		                          & (self.df.ema3[-1] < self.df.ema6[-1])
@@ -44,18 +46,19 @@ class Signals:
 		                          & (self.df.ema6[-2] < self.df.ema9[-2])
 		                          & (self.df.ema3[-2] < self.df.ema6[-2])
 	                          	& (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-	                          	& (self.df.Open < self.df.ema200), 1, 0)
+	                          	& (self.df.Open < self.df.ema200)
+	                          	& (self.df.ADX[-2] > 25), 1, 0)
 	                          	
-df = GetMinuteData('ETHUSDT', '1m', '100')
+'''df = GetMinuteData('ETHUSDT', '1m', '100')
 applytechnicals(df)
 inst = Signals(df)
 inst.decide()
-print(df.to_string())
+print(df.to_string())'''
 #dfx = df.loc[(df.index > pd.to_datetime('1639953910', unit='s')) > (df.index > pd.to_datetime('1639951210', unit='s'))]
 #print(dfx.to_string())
 
 	                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          	
-'''def strategy(pair, qty):
+def strategy(pair, qty):
 	df = GetMinuteData('ETHUSDT', '5m', '3000')
 	applytechnicals(df)
 	inst = Signals(df)
@@ -91,7 +94,7 @@ print(df.to_string())
 					if df.ema3[-2] < df.ema9[-2]:
 						break
 				break
-			if (buyprice - (df.ATR.iloc[-1] * 0.6)) > df.Close.iloc[-1]:
+			if (buyprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -135,7 +138,7 @@ print(df.to_string())
 					if df.ema3[-2] > df.ema9[-2]:
 						break
 				break
-			if (sellprice + (df.ATR.iloc[-1] * 0.6)) < df.Close.iloc[-1]:
+			if (sellprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
@@ -153,4 +156,4 @@ print(df.to_string())
 			
 while True:
 	strategy('ETHUSDT', 0.01)
-	time.sleep(1)'''
+	time.sleep(1)
