@@ -46,7 +46,7 @@ print(df.to_string())'''
 
 	                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          	
 def strategy(pair, qty):
-	df = GetMinuteData('ETHUSDT', '5m', '1000')
+	df = GetMinuteData('ETHUSDT', '1m', '1000')
 	applytechnicals(df)
 	inst = Signals(df)
 	inst.decide()
@@ -78,7 +78,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema8[-2] < df.ema13:
+					if df.ema8[-2] < df.ema13[-2]:
 						break
 				break
 			if (buyprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
@@ -93,7 +93,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema8[-2] < df.ema13:
+					if df.ema8[-2] < df.ema13[-2]:
 						break	
 				break
 	if df.Sell.iloc[-1]:
@@ -122,7 +122,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema8[-2] > df.ema13:
+					if df.ema8[-2] > df.ema13[-2]:
 						break
 				break
 			if (sellprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
@@ -137,7 +137,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.ema8[-2] > df.ema13:
+					if df.ema8[-2] > df.ema13[-2]:
 						break	
 				break
 			
