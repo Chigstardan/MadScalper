@@ -105,7 +105,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open[-2] < df.ema13[-2] and df.Open[-2] < df.ema8[-2]:
+					if df.Open[-2] < df.ema13[-2]:
 						break	
 				break
 	if df.Sell.iloc[-1]:
@@ -134,7 +134,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open[-2] > df.ema13[-2] and df.Open[-2] > df.ema8[-2]:
+					if df.Open[-2] > df.ema13[-2]:
 						break
 				break
 			if (sellprice + (df.ATR.iloc[-1] * 0.4)) < df.Close.iloc[-1]:
