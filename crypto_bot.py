@@ -36,7 +36,7 @@ class Signals:
 		                       & (self.df.Open > self.df.ema13)
 		                       & (self.df.Open > self.df.ema50)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
-		                       & ((self.df.High - self.df.Low) < (self.df.ATR * 1.2))
+		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
 		                       & (self.df.ADX > 22.5), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-1] < self.df.ema50[-1])
 		                       & (self.df.ema8[-1] < self.df.ema13[-1])
@@ -45,8 +45,8 @@ class Signals:
 		                       & (self.df.Open < self.df.ema13)
 		                       & (self.df.Open < self.df.ema50)
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-		                       & ((self.df.High - self.df.Low) < (self.df.ATR * 1.2))
-		                       & (self.df.ADX > 20.5), 1, 0)
+		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
+		                       & (self.df.ADX > 22.5), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
 applytechnicals(df)
@@ -90,7 +90,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open < df.ema13 and df.Open < df.ema8:
+					if df.Open[-2] < df.ema13[-2] and df.Open[-2] < df.ema8[-2]:
 						break
 				break
 			if (buyprice - (df.ATR.iloc[-1] * 0.4)) > df.Close.iloc[-1]:
@@ -105,7 +105,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open < df.ema13 and df.Open < df.ema8:
+					if df.Open[-2] < df.ema13[-2] and df.Open[-2] < df.ema8[-2]:
 						break	
 				break
 	if df.Sell.iloc[-1]:
@@ -134,7 +134,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open > df.ema13 and df.Open > df.ema8:
+					if df.Open[-2] > df.ema13[-2] and df.Open[-2] > df.ema8[-2]:
 						break
 				break
 			if (sellprice + (df.ATR.iloc[-1] * 0.4)) < df.Close.iloc[-1]:
@@ -149,7 +149,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open > df.ema13 and df.Open > df.ema8:
+					if df.Open[-2] > df.ema13[-2] and df.Open[-2] > df.ema8[-2]:
 						break	
 				break
 			
