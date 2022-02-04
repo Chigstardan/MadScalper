@@ -149,7 +149,7 @@ def strategy(pair, qty):
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
-					if df.Open > df.ema13 and df.Open > df.ema8::
+					if df.Open > df.ema13 and df.Open > df.ema8:
 						break	
 				break
 			
