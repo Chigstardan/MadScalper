@@ -3,6 +3,7 @@ import pandas as pd
 import ta
 import numpy as np
 import time
+import pandas_ta
 
 api_secret = 'kqo5vCzqaQUjhsIsdeqrbawKPFUd6TYVvaqcPggxDZWfPZTWfAB4SVXuHWRymRXo'
 api_key = 'oicPKWPW9v7UfaFUOj7H9yZB8oO5EbTdicm1KXZI4M0D2ory42Ic6E3lsAUwZYcP'
@@ -22,8 +23,8 @@ def applytechnicals(df):
 	df['ema13'] = ta.trend.ema_indicator(df.Close, window=13)
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
-	df['ADX'] = ta.trend.adx(df.High, df.Low, df.Close)
 	df['macd'] = ta.trend.macd_diff(df.Close)
+	df['chop'] = pandas_ta.trend.chop(df.Close, df.High, df.Low)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -38,7 +39,7 @@ class Signals:
 		                       & (self.df.Open > self.df.ema50)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
 		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
-		                       & (self.df.ADX > 23)
+		                       & (self.df.chop < 90)
 		                       & (self.df.macd > 0), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-1] < self.df.ema50[-1])
 		                       & (self.df.ema8[-1] < self.df.ema13[-1])
@@ -48,7 +49,7 @@ class Signals:
 		                       & (self.df.Open < self.df.ema50)
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
-		                       & (self.df.ADX > 23)
+		                       & (self.df.chop < 90)
 		                       & (self.df.macd < 0), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
@@ -96,7 +97,7 @@ def strategy(pair, qty):
 					if df.Close[-2] < df.ema13[-2]:
 						break
 				break
-			if (buyprice - (df.ATR.iloc[-1] * 0.4)) > df.Close.iloc[-1]:
+			if (buyprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -140,7 +141,7 @@ def strategy(pair, qty):
 					if df.Close[-2] > df.ema13[-2]:
 						break
 				break
-			if (sellprice + (df.ATR.iloc[-1] * 0.4)) < df.Close.iloc[-1]:
+			if (sellprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
