@@ -24,7 +24,7 @@ def applytechnicals(df):
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 	df['macd'] = ta.trend.macd_diff(df.Close)
-	df['chop'] = pandas_ta.trend.chop(df.Close, df.High, df.Low)
+	df['chop'] = pandas_ta.trend.chop(df.High, df.Low, df.Close)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -38,8 +38,8 @@ class Signals:
 		                       & (self.df.Open > self.df.ema13)
 		                       & (self.df.Open > self.df.ema50)
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
-		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
-		                       & (self.df.chop < 90)
+		                       & ((self.df.Close[-2] - self.df.Open[-2]) < (self.df.ATR[-2] * 1.2))
+		                       & (self.df.chop < 61)
 		                       & (self.df.macd > 0), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-1] < self.df.ema50[-1])
 		                       & (self.df.ema8[-1] < self.df.ema13[-1])
@@ -48,8 +48,8 @@ class Signals:
 		                       & (self.df.Open < self.df.ema13)
 		                       & (self.df.Open < self.df.ema50)
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-		                       & ((self.df.High[-2] - self.df.Low[-2]) < (self.df.ATR[-2] * 1.2))
-		                       & (self.df.chop < 90)
+		                       & ((self.df.Open[-2] - self.df.Close[-2]) < (self.df.ATR[-2] * 1.2))
+		                       & (self.df.chop < 61)
 		                       & (self.df.macd < 0), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
@@ -158,5 +158,5 @@ def strategy(pair, qty):
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.08)
+	strategy('ETHUSDT', 0.05)
 	time.sleep(1)
