@@ -71,7 +71,7 @@ def strategy(pair, qty):
 			inst = Signals(df)
 			inst.decide()
 			print(f'Current Close is '+str(df.Close.iloc[-1]))
-			if (buyprice + (df.ATR.iloc[-1] * 0.65)) < df.Close.iloc[-1]:
+			if (buyprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -86,7 +86,7 @@ def strategy(pair, qty):
 					if df.rsi.iloc[-2] < 50:
 						break
 				break
-			if buyprice - df.ATR.iloc[-1] > df.Close.iloc[-1]:
+			if (buyprice - (df.ATR.iloc[-1] * 0.6)) > df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='SELL',
 		                            type='MARKET',
@@ -130,7 +130,7 @@ def strategy(pair, qty):
 					if df.rsi.iloc[-2] > 50:
 						break
 				break
-			if sellprice + df.ATR.iloc[-1] < df.Close.iloc[-1]:
+			if sellprice + (df.ATR.iloc[-1] * 0.6) < df.Close.iloc[-1]:
 				order = client.futures_create_order(symbol=pair, 
 		                            side='BUY',
 		                            type='MARKET',
@@ -147,5 +147,5 @@ def strategy(pair, qty):
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.004)
+	strategy('ETHUSDT', 0.06)
 	time.sleep(1)
