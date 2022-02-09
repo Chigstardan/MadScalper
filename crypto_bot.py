@@ -147,5 +147,5 @@ def strategy(pair, qty):
 				break
 			
 while True:
-	strategy('ETHUSDT', 0.06)
+	strategy('ETHUSDT', 0.04)
 	time.sleep(1)
