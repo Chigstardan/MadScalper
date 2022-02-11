@@ -24,6 +24,7 @@ def applytechnicals(df):
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 	df['rsi'] = ta.momentum.rsi(df.Close)
+	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=8, window_fast=50, window_sign=8)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -35,13 +36,15 @@ class Signals:
 		                       & (self.df.Close[-2] > self.df.ema50[-2])
 		                       & ((self.df.Close[-2] - self.df.Open[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
-		                       & (self.df.Open.iloc[-3] < self.df.Low.iloc[-2]), 1, 0)
+		                       & (self.df.Open.iloc[-3] < self.df.Low.iloc[-2])
+		                       & (self.df.macd > 0), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-2] > self.df.Close.iloc[-2])
 		                       & (self.df.Open[-2] < self.df.ema50)
 		                       & (self.df.ema8[-2] < self.df.ema50[-2])
 		                       & ((self.df.Open[-2] - self.df.Close[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
-		                       & (self.df.Open.iloc[-3] > self.df.High.iloc[-2]), 1, 0)
+		                       & (self.df.Open.iloc[-3] > self.df.High.iloc[-2])
+		                       & (self.df.macd < 0), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
 applytechnicals(df)
