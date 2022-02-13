@@ -25,6 +25,7 @@ def applytechnicals(df):
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 	df['rsi'] = ta.momentum.rsi(df.Close)
 	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=50, window_fast=8, window_sign=8)
+	df['chaikin'] = ta.volume.chaikin_money_flow(df.High, df.Low, df.Close, df.Volume)
 	df.dropna(inplace=True)
 
 class Signals:
@@ -36,13 +37,15 @@ class Signals:
 		                       & ((self.df.Close[-2] - self.df.Open[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
 		                       & (self.df.macd > 0)
-		                       & (self.df.Volume[-3] < self.df.Volume[-2]), 1, 0)
+		                       & (self.df.chaikin > 0)
+		                       & (self.df.ATR > 7), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-2] > self.df.Close.iloc[-2])
 		                       & (self.df.Open[-2] < self.df.ema50)
 		                       & ((self.df.Open[-2] - self.df.Close[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 		                       & (self.df.macd < 0)
-		                       & (self.df.Volume[-3] < self.df.Volume[-2]), 1, 0)
+		                       & (self.df.chaikin < 0)
+		                       & (self.df.ATR > 7), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
 applytechnicals(df)
