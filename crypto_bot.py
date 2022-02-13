@@ -32,19 +32,17 @@ class Signals:
 		self.df = df	
 	def decide(self):
 		self.df['Buy'] = np.where((self.df.Close.iloc[-2] > self.df.ema8[-2])
-							   & (self.df.ema8[-2] > self.df.ema50[-2])
 		                       & (self.df.Close[-2] > self.df.ema50[-2])
 		                       & ((self.df.Close[-2] - self.df.Open[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] < self.df.Close.iloc[-2])
 		                       & (self.df.macd > 0)
-		                       & (self.df.ATR[-3] < self.df.ATR[-2]), 1, 0)
+		                       & (self.df.Volume[-3] < self.df.Volume[-2]), 1, 0)
 		self.df['Sell'] = np.where((self.df.ema8[-2] > self.df.Close.iloc[-2])
 		                       & (self.df.Open[-2] < self.df.ema50)
-		                       & (self.df.ema8[-2] < self.df.ema50[-2])
 		                       & ((self.df.Open[-2] - self.df.Close[-2]) < (self.df.ATR[-2] * 2))
 		                       & (self.df.Open.iloc[-2] > self.df.Close.iloc[-2])
 		                       & (self.df.macd < 0)
-		                       & (self.df.ATR[-3] < self.df.ATR[-2]), 1, 0)
+		                       & (self.df.Volume[-3] < self.df.Volume[-2]), 1, 0)
 	                          	
 '''df = GetMinuteData('ETHUSDT', '1m', '100')
 applytechnicals(df)
