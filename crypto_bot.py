@@ -166,7 +166,7 @@ def strategy(pair, qty):
 						break
 			if df.macd.iloc[-2] > 0:
 				order = client.futures_create_order(symbol=pair, 
-		                            side='SELL',
+		                            side='BUY',
 		                            type='MARKET',
 		                            quantity=qty)
 				print(order)
