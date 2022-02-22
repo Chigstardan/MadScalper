@@ -24,7 +24,7 @@ def applytechnicals(df):
 	df['ema50'] = ta.trend.ema_indicator(df.Close, window=50)
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 	df['rsi'] = ta.momentum.rsi(df.Close)
-	df['macd'] = ta.trend.macd_diff(df.Close, window_slow=50, window_fast=8, window_sign=8)
+	df['macd'] = ta.trend.macd_diff(df.Close)
 	df['%K'] = ta.momentum.stoch(df.High, df.Low, df.Close, window=10, smooth_window=3)
 	df.dropna(inplace=True)
 
@@ -55,7 +55,7 @@ print(df.to_string())'''
 
 	                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          		                          	
 def strategy(pair, qty):
-	df = GetMinuteData('ETHUSDT', '5m', '1000')
+	df = GetMinuteData('ETHUSDT', '15m', '2000')
 	applytechnicals(df)
 	inst = Signals(df)
 	inst.decide()
@@ -70,7 +70,7 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(1)
-			df = GetMinuteData('ETHUSDT', '5m', '1000')
+			df = GetMinuteData('ETHUSDT', '15m', '2000')
 			applytechnicals(df)
 			inst = Signals(df)
 			inst.decide()
@@ -78,7 +78,7 @@ def strategy(pair, qty):
 			if (buyprice + (df.ATR.iloc[-1] * 0.7)) < df.Close.iloc[-1]:
 				while True:
 					time.sleep(1)
-					df = GetMinuteData('ETHUSDT', '5m', '1000')
+					df = GetMinuteData('ETHUSDT', '15m', '2000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -91,7 +91,7 @@ def strategy(pair, qty):
 						print(order)
 						while True:
 							time.sleep(5)
-							df = GetMinuteData('ETHUSDT', '5m', '1000')
+							df = GetMinuteData('ETHUSDT', '15m', '2000')
 							applytechnicals(df)
 							inst = Signals(df)
 							inst.decide()
@@ -107,7 +107,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '1000')
+					df = GetMinuteData('ETHUSDT', '15m', '2000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -122,7 +122,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '1000')
+					df = GetMinuteData('ETHUSDT', '15m', '1000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -138,7 +138,7 @@ def strategy(pair, qty):
 		print(order)
 		while True:
 			time.sleep(1)
-			df = GetMinuteData('ETHUSDT', '5m', '1000')
+			df = GetMinuteData('ETHUSDT', '15m', '1000')
 			applytechnicals(df)
 			inst = Signals(df)
 			inst.decide()
@@ -146,7 +146,7 @@ def strategy(pair, qty):
 			if (sellprice - (df.ATR.iloc[-1] * 0.7)) > df.Close.iloc[-1]:
 				while True:
 					time.sleep(1)
-					df = GetMinuteData('ETHUSDT', '5m', '1000')
+					df = GetMinuteData('ETHUSDT', '15m', '1000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -159,7 +159,7 @@ def strategy(pair, qty):
 						print(order)
 						while True:
 							time.sleep(5)
-							df = GetMinuteData('ETHUSDT', '5m', '3000')
+							df = GetMinuteData('ETHUSDT', '15m', '3000')
 							applytechnicals(df)
 							inst = Signals(df)
 							inst.decide()
@@ -175,7 +175,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '3000')
+					df = GetMinuteData('ETHUSDT', '15m', '3000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
@@ -190,7 +190,7 @@ def strategy(pair, qty):
 				print(order)
 				while True:
 					time.sleep(5)
-					df = GetMinuteData('ETHUSDT', '5m', '1000')
+					df = GetMinuteData('ETHUSDT', '15m', '1000')
 					applytechnicals(df)
 					inst = Signals(df)
 					inst.decide()
