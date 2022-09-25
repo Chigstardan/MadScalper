@@ -4,11 +4,12 @@ import ta
 import numpy as np
 import time
 import pandas_ta
-
-api_secret = 'kqo5vCzqaQUjhsIsdeqrbawKPFUd6TYVvaqcPggxDZWfPZTWfAB4SVXuHWRymRXo'
-api_key = 'oicPKWPW9v7UfaFUOj7H9yZB8oO5EbTdicm1KXZI4M0D2ory42Ic6E3lsAUwZYcP'
+# API keys and secret should be in string format
+api_secret = 'your binance API secret key'
+api_key = 'your binance API key'
 client = Client(api_key, api_secret)
-
+# This Function creates dataframe containing trading data
+# In a timeframe of your choice.
 def GetMinuteData(symbol, interval, lookback):
 	frame = pd.DataFrame(client.futures_historical_klines(symbol, interval, lookback + ' min ago UTC'))
 	frame = frame.iloc[:,:6]
@@ -17,7 +18,7 @@ def GetMinuteData(symbol, interval, lookback):
 	frame.index = pd.to_datetime(frame.index, unit='ms')
 	frame = frame.astype(float)
 	return frame
-	
+# here is the technical indicators calculated with pandas_ta.	
 def applytechnicals(df):
 	df['ema8'] = ta.trend.ema_indicator(df.Close, window=8)
 	df['ema13'] = ta.trend.ema_indicator(df.Close, window=13)
@@ -25,7 +26,7 @@ def applytechnicals(df):
 	df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 	df['MFI'] = ta.volume.money_flow_index(df.High, df.Low, df.Close, df.Volume, window=3)
 	df.dropna(inplace=True)
-
+# Buy and Sell Signals.
 class Signals:
 	def __init__(self, df):
 		self.df = df	
@@ -58,7 +59,6 @@ def strategy(pair, qty):
 	inst = Signals(df)
 	inst.decide()
 	print(f'Current Close is '+str(df.Close.iloc[-1]))
-
 	if df.Buy.iloc[-1]:
 		buyprice = df.Close.iloc[-1]
 		order = client.futures_create_order(symbol=pair, 
